@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lamgnaoh.shopapp.exceptions.InvalidParamException;
 import org.lamgnaoh.shopapp.models.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -69,4 +70,9 @@ public class JwtTokenUtils {
   }
 
 
+  public boolean validateToken(String token, UserDetails userDetails) {
+    // validate xem có trùng phoneNumber hay không và token đã expire chưa
+    String phoneNumber = extractClaim(token, Claims::getSubject);
+    return phoneNumber.equals(userDetails.getUsername()) && isTokenExpired(token);
+  }
 }
